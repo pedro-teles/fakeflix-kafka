@@ -2,8 +2,8 @@
   (:require [fakeflix-kafka.logic.kafka :as logic.kafka]
             [fakeflix-kafka.topics :as logic.topics :as topics])
   (:import (java.time Duration)
-           (org.apache.kafka.common.serialization StringDeserializer)
-           (org.apache.kafka.clients.consumer KafkaConsumer)))
+           (org.apache.kafka.clients.consumer KafkaConsumer)
+           (org.apache.kafka.common.serialization StringDeserializer)))
 
 (def consumer (atom nil))
 

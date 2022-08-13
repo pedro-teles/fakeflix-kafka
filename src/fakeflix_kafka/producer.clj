@@ -1,9 +1,9 @@
 (ns fakeflix-kafka.producer
   (:require [fakeflix-kafka.logic.kafka :as logic]
             [fakeflix-kafka.topics :as topics])
-  (:import (org.apache.kafka.common.serialization StringSerializer)
+  (:import (java.util UUID)
            (org.apache.kafka.clients.producer KafkaProducer ProducerRecord)
-           (java.util UUID)))
+           (org.apache.kafka.common.serialization StringSerializer)))
 
 (def producer (atom nil))
 
