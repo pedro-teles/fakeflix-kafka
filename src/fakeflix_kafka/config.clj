@@ -13,4 +13,4 @@
    (topics/create-topics! (logic.kafka/merge-topics consumer-topics producer-topics) bootstrap-server 1 1)
    (topics/update-topics-reference consumer-topics producer-topics)
    (consumer/subscribe-topics (logic.kafka/topics-from-consumer consumer-topics))
-   (consumer/observe-messages)))
+   (consumer/consume-messages)))
