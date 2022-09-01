@@ -1,6 +1,7 @@
 (ns fakeflix-kafka.consumer
-  (:require [fakeflix-kafka.logic.kafka :as logic.kafka]
-            [fakeflix-kafka.topics :as logic.topics :as topics])
+  (:require [fakeflix-kafka.log :as log]
+            [fakeflix-kafka.logic.kafka :as logic.kafka]
+            [fakeflix-kafka.topics :as topics])
   (:import (java.time Duration)
            (org.apache.kafka.clients.consumer KafkaConsumer)
            (org.apache.kafka.common.serialization StringDeserializer)))
@@ -14,7 +15,7 @@
          "group.id",           group-id
          "key.deserializer",   StringDeserializer
          "value.deserializer", StringDeserializer
-         "auto.offset.reset",  "earliest"
+         "auto.offset.reset",  "latest"
          "enable.auto.commit", "true"}]
     (swap! consumer (fn [_]
                       (KafkaConsumer. consumer-props)))))
@@ -34,10 +35,15 @@
   (while true
     (let [records (.poll @consumer (Duration/ofMillis 1000))]
       (doseq [record records]
-        (let [handler-fn (logic.kafka/consumer-handler-fn (.topic record) @topics/consumer)]
-          (handler-fn (.value record)))))))
+        (let [topic (.topic record)
+              handler-fn (logic.kafka/consumer-handler-fn topic @topics/consumer)]
+          (try
+            (handler-fn (.value record))
+            (log/info (str "Message consumed from topic: " topic))
+            (catch Exception e (log/error e (str "Error consuming message from topic " topic))))))
+      (.commitAsync @consumer))))
 
-(defn observe-messages
+(defn consume-messages
   []
   (if-not (nil? @consumer)
     (future (fetch-messages))))
