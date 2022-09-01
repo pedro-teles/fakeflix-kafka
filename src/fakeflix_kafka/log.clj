@@ -7,17 +7,14 @@
 (def logger ^Logger (LoggerFactory/getLogger "fakeflix-logback"))
 
 (defn set-log-level!
-  "Pass keyword :error :info :debug"
   [level]
   (case level
     :debug (.setLevel logger Level/DEBUG)
     :info (.setLevel logger Level/INFO)
     :error (.setLevel logger Level/ERROR)))
 
-(defmacro with-logging-context [context & body]
-  "Use this to add a map to any logging wrapped in the macro. Macro can be nested.
-  (with-logging-context {:key \"value\"} (log/info \"yay\"))
-  "
+(defmacro with-logging-context
+  [context & body]
   `(let [wrapped-context# ~context
          ctx# (MDC/getCopyOfContextMap)]
      (try
