@@ -1,7 +1,7 @@
 (ns fakeflix-kafka.consumer
-  (:require [fakeflix-kafka.log :as log]
-            [fakeflix-kafka.logic.kafka :as logic.kafka]
-            [fakeflix-kafka.topics :as topics])
+  (:require [fakeflix-kafka.logic.kafka :as logic.kafka]
+            [fakeflix-kafka.topics :as topics]
+            [fakeflix-logs.observability :as observability])
   (:import (java.time Duration)
            (org.apache.kafka.clients.consumer KafkaConsumer)
            (org.apache.kafka.common.serialization StringDeserializer)))
@@ -39,8 +39,8 @@
               handler-fn (logic.kafka/consumer-handler-fn topic @topics/consumer)]
           (try
             (handler-fn (.value record))
-            (log/info (str "Message consumed from topic: " topic))
-            (catch Exception e (log/error e (str "Error consuming message from topic " topic))))))
+            (observability/info (str "Message consumed from topic: " topic))
+            (catch Exception e (observability/error e (str "Error consuming message from topic " topic))))))
       (.commitAsync @consumer))))
 
 (defn consume-messages
