@@ -1,6 +1,7 @@
 (ns fakeflix-kafka.producer
   (:require [fakeflix-kafka.logic.kafka :as logic]
-            [fakeflix-kafka.topics :as topics])
+            [fakeflix-kafka.topics :as topics]
+            [fakeflix-logs.observability :as observability])
   (:import (java.util UUID)
            (org.apache.kafka.clients.producer KafkaProducer ProducerRecord)
            (org.apache.kafka.common.serialization StringSerializer)))
@@ -24,4 +25,8 @@
   [message topic]
   (let [topic-name (logic/topic-from-producer @topics/producer topic)
         message-key (UUID/randomUUID)]
-    (.send @producer (ProducerRecord. topic-name (str message-key) message))))
+    (try
+      (.send @producer (ProducerRecord. topic-name (str message-key) message))
+      (observability/info (str "Message produced to topic: " topic-name))
+      (catch Exception e
+        (observability/error e (str "Error producing message to topic: " topic-name))))))

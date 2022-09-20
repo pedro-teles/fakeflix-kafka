@@ -1,4 +1,4 @@
-(defproject org.clojars.pedroso/fakeflix-kafka "1.0.1"
+(defproject org.clojars.pedroso/fakeflix-kafka "1.0.2"
   :description "Fakeflix Kafka library"
   :url "https://pedroteles.dev"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
@@ -7,7 +7,7 @@
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [org.apache.kafka/kafka-clients "3.1.0"]
                  [org.apache.kafka/kafka_2.12 "3.1.0"]
-                 [ch.qos.logback/logback-classic "1.1.3"]]
+                 [org.clojars.pedroso/fakeflix-logs "1.0.0"]]
   :aliases {"diagnostics"  ["clojure-lsp" "diagnostics"]
             "format"       ["clojure-lsp" "format" "--dry"]
             "format-fix"   ["clojure-lsp" "format"]
